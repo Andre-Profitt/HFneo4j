@@ -1,0 +1,117 @@
+version: '3.8'
+
+services:
+  neo4j:
+    image: neo4j:5.20-enterprise
+    container_name: hedge-fund-neo4j
+    ports:
+      - "7474:7474"  # HTTP
+      - "7687:7687"  # Bolt
+    environment:
+      - NEO4J_AUTH=neo4j/hedgefund123!
+      - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+      - NEO4J_server_memory_heap_initial__size=2g
+      - NEO4J_server_memory_heap_max__size=4g
+      - NEO4J_server_memory_pagecache__size=2g
+      - NEO4J_dbms_memory_off__heap_enabled=true
+      - NEO4J_dbms_memory_off__heap_max__size=2g
+      - NEO4J_metrics_enabled=true
+      - NEO4J_metrics_prometheus_enabled=true
+      - NEO4J_metrics_prometheus_endpoint=0.0.0.0:2004
+      - NEO4J_PLUGINS=["graph-data-science"]
+      - NEO4J_dbms_security_procedures_unrestricted=gds.*,apoc.*
+      - NEO4J_dbms_security_procedures_allowlist=gds.*,apoc.*
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+      - neo4j_plugins:/plugins
+      - ./import:/import
+    networks:
+      - hedge-fund-net
+    healthcheck:
+      test: ["CMD", "neo4j", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: hedge-fund-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+    networks:
+      - hedge-fund-net
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: hedge-fund-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: EXTERNAL_SAME_HOST://:29092,INTERNAL://:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL_SAME_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL_SAME_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+    networks:
+      - hedge-fund-net
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    container_name: hedge-fund-zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - hedge-fund-net
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: hedge-fund-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - hedge-fund-net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: hedge-fund-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=hedgefund123!
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana-dashboards:/etc/grafana/provisioning/dashboards
+    networks:
+      - hedge-fund-net
+
+volumes:
+  neo4j_data:
+  neo4j_logs:
+  neo4j_plugins:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  hedge-fund-net:
+    driver: bridge

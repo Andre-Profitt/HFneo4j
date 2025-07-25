@@ -1,0 +1,82 @@
+# Core dependencies
+python==3.11.*
+neo4j==5.20.0
+redis==5.0.1
+kafka-python==2.0.2
+
+# Scientific computing
+numpy==1.26.4
+pandas==2.2.0
+scipy==1.12.0
+networkx==3.2.1
+
+# Machine Learning & Graph Neural Networks
+torch==2.3.0
+torch-geometric==2.5.0
+pytorch-lightning==2.2.0
+torch-temporal-graph-networks==0.9.0
+
+# Optimization
+cvxpy==1.4.2
+ecos==2.0.13
+osqp==0.6.5
+
+# Graph algorithms
+python-louvain==0.16
+node2vec==0.4.6
+stellargraph==1.2.1
+
+# Data processing
+pyarrow==15.0.0
+fastparquet==2024.2.0
+dask[complete]==2024.2.0
+
+# API & Web
+fastapi==0.110.0
+uvicorn[standard]==0.27.1
+pydantic==2.6.1
+
+# Monitoring & Logging
+prometheus-client==0.20.0
+structlog==24.1.0
+sentry-sdk==1.40.5
+
+# Testing
+pytest==8.0.1
+pytest-asyncio==0.23.5
+pytest-cov==4.1.0
+pytest-benchmark==4.0.0
+
+# Development tools
+black==24.2.0
+ruff==0.2.1
+mypy==1.8.0
+pre-commit==3.6.1
+
+# Jupyter & Visualization
+jupyter==1.0.0
+ipywidgets==8.1.2
+plotly==5.19.0
+matplotlib==3.8.3
+seaborn==0.13.2
+
+# Additional ML/Graph tools
+scikit-learn==1.4.1
+xgboost==2.0.3
+optuna==3.5.0
+shap==0.44.1
+
+# Time series
+statsmodels==0.14.1
+pmdarima==2.0.4
+prophet==1.1.5
+
+# Database tools
+alembic==1.13.1
+sqlalchemy==2.0.27
+
+# Async & Parallel
+aiofiles==23.2.1
+aiokafka==0.10.0
+asyncpg==0.29.0
+ray[default]==2.9.2

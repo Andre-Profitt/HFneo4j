@@ -1,0 +1,197 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "hedge-fund-graph-stack",
+    "title": "Hedge Fund Graph Stack",
+    "tags": ["finance", "graph", "neo4j"],
+    "timezone": "browser",
+    "schemaVersion": 16,
+    "version": 0,
+    "refresh": "30s",
+    "panels": [
+      {
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+        "id": 1,
+        "title": "Strategy Performance - Sharpe Ratios",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "hedge_fund_strategy_sharpe_ratio",
+            "legendFormat": "{{strategy}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "short", "label": "Sharpe Ratio"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "id": 2,
+        "title": "Portfolio Risk Metrics",
+        "type": "gauge",
+        "targets": [
+          {
+            "expr": "hedge_fund_risk_metrics{metric=\"portfolio_var\"}",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        },
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "max": 0.1,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 0.03},
+                {"color": "red", "value": 0.05}
+              ]
+            },
+            "unit": "percentunit"
+          }
+        }
+      },
+      {
+        "gridPos": {"h": 8, "w": 8, "x": 0, "y": 8},
+        "id": 3,
+        "title": "Graph Database Size",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "hedge_fund_graph_metrics{metric=\"database_size_mb\"}",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": ["lastNotNull"],
+            "fields": "",
+            "values": false
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "decmbytes"
+          }
+        }
+      },
+      {
+        "gridPos": {"h": 8, "w": 8, "x": 8, "y": 8},
+        "id": 4,
+        "title": "Active Trading Strategies",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "hedge_fund_active_strategies",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "horizontal"
+        }
+      },
+      {
+        "gridPos": {"h": 8, "w": 8, "x": 16, "y": 8},
+        "id": 5,
+        "title": "Anomaly Alert Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(hedge_fund_anomaly_alerts_total[5m])",
+            "legendFormat": "{{type}} - {{severity}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "short", "label": "Alerts/sec"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+        "id": 6,
+        "title": "Pipeline Processing Performance",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(hedge_fund_pipeline_processed_total[5m])",
+            "legendFormat": "{{pipeline}} - {{status}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "short", "label": "Records/sec"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+        "id": 7,
+        "title": "Pipeline Duration",
+        "type": "heatmap",
+        "targets": [
+          {
+            "expr": "hedge_fund_pipeline_duration_seconds_bucket",
+            "format": "heatmap",
+            "refId": "A"
+          }
+        ],
+        "dataFormat": "tsbuckets",
+        "options": {
+          "calculate": false,
+          "cellGap": 1,
+          "cellRadius": 2,
+          "color": {
+            "scheme": "Oranges"
+          }
+        }
+      },
+      {
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 24},
+        "id": 8,
+        "title": "System Health Overview",
+        "type": "table",
+        "targets": [
+          {
+            "expr": "up{job=~\"neo4j|hedge-fund-app|redis\"}",
+            "format": "table",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "showHeader": true
+        },
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "align": "auto",
+              "displayMode": "color-background",
+              "inspect": false
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "green", "value": 1}
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
+}

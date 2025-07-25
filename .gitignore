@@ -1,0 +1,105 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Docker volumes
+docker/neo4j_data/
+docker/redis_data/
+docker/prometheus_data/
+docker/grafana_data/
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Model files
+*.pt
+*.pth
+*.pkl
+best_gnn_model.pt
+
+# Data files (but keep example data)
+data/
+!data/example/
+
+# Temporary files
+*.tmp
+*.temp
+*.cache
+
+# Generated visualizations (from demo)
+*.png
+!docs/images/*.png
+
+# Sensitive configuration
+*_credentials.json
+*_secret*
+
+# Neo4j imports
+docker/import/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# pytest
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Ray
+ray_results/
+ray_session*/
